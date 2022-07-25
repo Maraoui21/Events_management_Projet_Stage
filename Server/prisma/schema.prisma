@@ -21,7 +21,9 @@ model Evenements{
 
 model Participants{
   IdPart Int @id @default(autoincrement())
-  Nom String 
+  Nom String
+  Tel String
+  email String
   Prenom String
   Evenement Evenements @relation(fields: [EvenementID],references: [IdEv])
   EvenementID Int
@@ -32,6 +34,8 @@ model users{
   Nom String
   Prenom String
   Password String
+  email String
+  Phone String
   UserRole Role @default(Author)
 }
 

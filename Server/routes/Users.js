@@ -28,18 +28,20 @@ router.post('/', authenticationToken, async (req,res,next)=>{
     Role = UncodedUser && UncodedUser.UserRole;
     if(Role == 'admin'){
         const salt = await bcrypt.genSalt();
-        const hashedPassword = await bcrypt.hash(req.body.password,salt)
+        const hashedPassword = await bcrypt.hash(req.body.Password,salt)
         try {
             const user = await prisma.users.create({
                 data:{
                     Nom:req.body.Nom,
                     Prenom:req.body.Prenom,
-                    Password:hashedPassword
+                    Password:hashedPassword,
+                    email:req.body.email,
+                    Phone:req.body.Tel
                 }
             })
             
-            res.send(user)
-    
+            res.send({rep:"l'utilisateur est créé"})
+            
         } catch (error) {
             next(error)
         }

@@ -17,7 +17,7 @@ router.post('/evenments', authenticationToken, async (req,res,next)=>{
                 Contenu:req.body.Contenu
             }
         })
-        res.send(event)
+        res.send({rep:'Posté avec succès'})
     } catch (error) {
         next(error)
     }
