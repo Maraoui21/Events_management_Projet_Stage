@@ -1,8 +1,12 @@
 import axios from "axios";
 import React,{useState} from "react";
-import { headers } from "../Accueil";
-
+import Cookies from 'js-cookie'
 const AddUser = () =>{
+    const StoredVal = Cookies.get('jwt');
+		const jwt = StoredVal && JSON.parse(StoredVal).jwt;
+        const headers = { 
+            'Authorization': `Bearer ${jwt}`,
+        };
     const [userStateMessage,setMessage]=useState('');
 
     function sendUser(e){

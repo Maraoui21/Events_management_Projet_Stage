@@ -14,7 +14,8 @@ router.post('/evenments', authenticationToken, async (req,res,next)=>{
                 Titre:req.body.Titre,
                 ImgPath:req.body.ImgPath,
                 Date:req.body.Date,
-                Contenu:req.body.Contenu
+                Contenu:req.body.Contenu,
+                Form:Boolean(Number(req.body.Form)) 
             }
         })
         res.send({rep:'Posté avec succès'})

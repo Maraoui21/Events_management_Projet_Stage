@@ -15,6 +15,7 @@ model Evenements{
   Titre String
   ImgPath String
   Date DateTime
+  Form Boolean @default(false)
   Contenu String @db.Text
   Participant Participants[]
 }

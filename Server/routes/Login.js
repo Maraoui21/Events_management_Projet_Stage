@@ -11,20 +11,20 @@ router.post('/', async (req,res,next)=>{
     // authentication part
     const user = users.find(o=>o.email == req.body.Nom);
     // if user name is not exist
-    if(user == null )
+    if(user != null )
     {
-        res.send({err:'user is not exist'});
-    }
-    else{
         // if hashed password nat equal to user password 
         if(await bcrypt.compare(req.body.password,user.Password)){
             // CREATE JSON WEB TOKEN 
-        const accessToken = jwt.sign(user,process.env.ACCESS_TOKEN_SECRET)
-        res.send({jwt:accessToken,name:user.Nom,Role:user.UserRole,email:user.email});
-        }
-        else{
-        res.send({err:'password is incorrect'})
-        } 
+            const accessToken = jwt.sign(user,process.env.ACCESS_TOKEN_SECRET)
+            res.send({jwt:accessToken,name:user.Nom,Role:user.UserRole,email:user.email});
+            }
+            else{
+            res.send({err:'password is incorrect'})
+            } 
+    }
+    else{
+        res.send('user is not exist')
     }
 })
 
