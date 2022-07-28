@@ -33,7 +33,7 @@ const Participants = () =>{
     }
     function searchEvntParticipants(){
         if(EvId==''){
-            setEmpty('Choisir un evenement')
+            setEmpty('Choisir un événement !')
         }else{
             setLoading(true)
             axios.get(`http://localhost:3000/api/Participants/${EvId}`,{headers})
@@ -50,7 +50,10 @@ const Participants = () =>{
     },[])
     return (
         <div className="w-11/12 mx-auto px-16 py-10">
-            <span className="text-red-500 p-2">{emptyOptionMsg}</span>
+            <h2 class="text-gray-800 capitalize text-xl mb-1 font-bold">
+                Liste des participants inscrits
+            </h2>
+            <span className="text-red-500 ">{emptyOptionMsg}</span>
             <div className="md:flex items-center mt-3">
                 <select onClick={e=>setEmpty('')} onChange={e=>setIdEv(e.currentTarget.value)} id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block md:w-2/4 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
                 <option disabled selected>Choisir un événement</option>
@@ -80,7 +83,9 @@ const Participants = () =>{
 									</tr>
 								</thead>
 								<tbody class="text-gray-600 text-sm font-light">
-                                    {EvParticipants && EvParticipants.map(e=>{
+                                    {EvParticipants&& (EvParticipants.length==0)?
+                                        <td colspan="4" className="text-center">Aucun participant est inscrit</td>
+                                        :EvParticipants.map(e=>{
                                         return (
                                             <tr class="border-b border-gray-200 bg-gray-50 hover:bg-gray-100">
 										<td class="py-3 px-6 text-left">

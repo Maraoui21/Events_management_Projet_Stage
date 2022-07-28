@@ -1,5 +1,44 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 const DashboardCounters = () =>{
+    const StoredVal = Cookies.get('jwt');
+    const jwt = StoredVal && JSON.parse(StoredVal).jwt;
+    const headers = { 
+        'Authorization': `Bearer ${jwt}`,
+    };
+    const [countUsers,setUsers]=useState([]);
+    const [CountEvents,setEvent]=useState([]);
+    const [countParticipants,setParticipants]=useState([]);
+
+    function fetchData(){
+
+        // users 
+
+        axios.get('http://localhost:3000/users',{headers})
+        .then(e=>{
+            setUsers(e.data);
+        });
+
+        // Events 
+
+        axios.get('http://localhost:3000/api/evenments',)
+        .then(e=>{
+            setEvent(e.data)
+        });
+
+        //  participants
+
+        axios.get('http://localhost:3000/api/Participants',{headers})
+        .then(e=>{
+            setParticipants(e.data)
+        });
+    }
+
+    useEffect(()=>{
+        fetchData();
+    },[])
+
     return (
         <div class="mt-4">
             <div class="flex flex-wrap -mx-6">
@@ -30,7 +69,7 @@ const DashboardCounters = () =>{
                         </div>
 
                         <div class="mx-5">
-                            <h4 id='usersCounter' class="text-2xl font-semibold text-gray-700">200</h4>
+                            <h4 id='usersCounter' class="text-2xl font-semibold text-gray-700">{countParticipants.length}</h4>
                             <div class="text-gray-500">Participants</div>
                         </div>
                     </div>
@@ -46,7 +85,7 @@ const DashboardCounters = () =>{
                         </div>
 
                         <div class="mx-5">
-                            <h4 id="articlesCounter" class="text-2xl font-semibold text-gray-700">200</h4>
+                            <h4 id="articlesCounter" class="text-2xl font-semibold text-gray-700">{CountEvents.length}</h4>
                             <div class="text-gray-500">Posted Events</div>
                         </div>
                     </div>
@@ -61,7 +100,7 @@ const DashboardCounters = () =>{
                         </div>
 
                         <div class="mx-5">
-                            <h4 id="labelsCounter" class="text-2xl font-semibold text-gray-700">200</h4>
+                            <h4 id="labelsCounter" class="text-2xl font-semibold text-gray-700">{countUsers.length}</h4>
                             <div class="text-gray-500">users</div>
                         </div>
                     </div>

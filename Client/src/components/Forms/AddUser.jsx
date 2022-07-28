@@ -1,14 +1,14 @@
 import axios from "axios";
 import React,{useState} from "react";
 import Cookies from 'js-cookie'
-const AddUser = () =>{
+const AddUser = (props) =>{
+
     const StoredVal = Cookies.get('jwt');
 		const jwt = StoredVal && JSON.parse(StoredVal).jwt;
         const headers = { 
             'Authorization': `Bearer ${jwt}`,
         };
     const [userStateMessage,setMessage]=useState('');
-
     function sendUser(e){
         e.preventDefault();
         const firstName = e.target.first_name.value;
@@ -16,9 +16,12 @@ const AddUser = () =>{
         const phone  = e.target.phone.value;
         const email = e.target.email.value;
         const password = e.target.email.value;
-        const NewUser = {Nom:firstName,Prenom:lastName,Password:password,email:email,Tel:phone}
+        const NewUser = {Nom:firstName,Prenom:lastName,Password:password,email:email,Tel:phone};
         axios.post('http://localhost:3000/users',NewUser,{headers})
-        .then(Response=>setMessage(Response.data.rep))
+        .then(Response=>{
+            setMessage(Response.data.rep)
+            props.callParent()
+        })
     }
 
     return(

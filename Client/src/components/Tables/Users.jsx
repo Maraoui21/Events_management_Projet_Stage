@@ -1,7 +1,9 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState,forwardRef,useImperativeHandle } from "react"
 import Cookies from 'js-cookie';
-const Users = ( )=>{
+
+const Users = forwardRef((childRef,ref)=>{
+
 		const StoredVal = Cookies.get('jwt');
 		const jwt = StoredVal && JSON.parse(StoredVal).jwt;
         const headers = { 
@@ -12,7 +14,18 @@ const Users = ( )=>{
 	const [updateUserModal, setUpdateModal] = useState(false);
 	const [deleteUserModal,setDeleteModal]= useState(false);
     const [updateMessage,setUpdateMessage] = useState();
+	const [deleteMessage,setDeleteMessage] = useState();
 	const [isLoading,setLoading] = useState(true);
+	const [uniqueUser,setUser]=useState();
+	const [toDelete,setDelete]=useState();
+	
+	useImperativeHandle(ref,()=>({
+
+		callChildFunction(){
+			fetchUsers()
+		}
+	}))
+
 
 	const  tableContainer = {
 		'overflow': 'auto',
@@ -23,8 +36,8 @@ const Users = ( )=>{
 		'top': '0',
 		'z-index': '1',
 	}
-
-	function fetchUser(){
+	
+	function fetchUsers(){
 		axios.get('http://localhost:3000/users',{headers})
 		.then(e=>{
 			setUsers(e.data)
@@ -32,24 +45,41 @@ const Users = ( )=>{
 		})
 	}
 
-	function updateUser(e){
+	function fetchUniqueUser(userId){
+		axios.get(`http://localhost:3000/users/${userId}`,{headers})
+		.then(e=>{
+			setUser(e.data);
+			setUpdateModal(true)
+		})
+	}
+
+	function updateUser(e,IdUser){
 		e.preventDefault();
 		const firstName = e.target.first_name.value;
 		const lastName = e.target.last_name.value;
 		const phone  = e.target.phone.value;
 		const email = e.target.email.value;
-		const password = e.target.email.value;
+		const password = e.target.password.value;
 		const NewUser = {Nom:firstName,Prenom:lastName,Password:password,email:email,Tel:phone}
-		axios.put('http://localhost:3000/users',NewUser,{headers})
-		.then(Response=>setUpdateMessage(Response.data.rep))
+		console.log(NewUser)
+		axios.put(`http://localhost:3000/users/${IdUser}`,NewUser,{headers})
+		.then(Response=>{
+			setUpdateMessage(Response.data.rep)
+			fetchUsers();
+		})
 	}
-	function deleteUser(){
-		console.log('hey')
+	
+	function deleteUser(userId){
+		axios.delete(`http://localhost:3000/users/${userId}`,{headers})
+		.then(e=>{
+			setDeleteMessage(e.data.rep)
+			fetchUsers();
+		})
 	}
 
 
 	useEffect(()=>{
-		fetchUser()
+		fetchUsers()
 	},[])
 
 
@@ -89,24 +119,29 @@ const Users = ( )=>{
 													<path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
 													</svg>
 												</div>
-												<span>{e.Nom}</span>
+												<span className="text-slate-700">{e.Nom}</span>
 											</div>
 										</td>
 										<td class="py-3 px-6 text-center">
-											<span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">{e.UserRole}</span>
+											<span class="bg-green-200 text-slate-600 font-bold py-1 px-3 rounded-full text-xs">{e.UserRole}</span>
 										</td>
 										<td class="py-3 px-6 text-center">
 											<div class="flex item-center justify-center">
 												<div class="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
 													<div>
-														<div  onClick={() => setUpdateModal(true)}>
+														<div  onClick={() => {
+																fetchUniqueUser(e.IdUser)
+																}}>
 														<svg  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 															<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
 														</svg>
 														</div>
 													</div>
 												</div>
-												<div onClick={()=>setDeleteModal(true)} class="w-4 mr-2 transform hover:text-red-500 hover:scale-110">
+												<div onClick={()=>{
+														setDeleteModal(true)
+														setDelete(e.IdUser)
+													}} class="w-4 mr-2 transform hover:text-red-500 hover:scale-110">
 													<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 														<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
 													</svg>
@@ -115,7 +150,7 @@ const Users = ( )=>{
 										</td>
 									</tr>
 											)
-										})
+										}).reverse()
 									}
 								</tbody>
 							</table>
@@ -151,24 +186,25 @@ const Users = ( )=>{
 						</svg>
 					</button>
 				</div>
-				<form onSubmit={e=>{updateUser(e)}}>
+				<span className="text-green-400 pb-4">{updateMessage}</span>
+				<form onSubmit={e=>{updateUser(e,uniqueUser.IdUser)}}>
                     <div class="grid gap-6 mb-2 lg:grid-cols-2">
                         <div>
                             <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Nom</label>
-                            <input onClick={e=>setUpdateMessage('')} type="text" id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nom" required/>
+                            <input defaultValue={uniqueUser.Nom} onClick={e=>setUpdateMessage('')} type="text" id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nom" required/>
                         </div>
                         <div>
                             <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Prénom</label>
-                            <input onClick={e=>setUpdateMessage('')} type="text" id="last_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Prénom" required/>
+                            <input defaultValue={uniqueUser.Prenom} onClick={e=>setUpdateMessage('')} type="text" id="last_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Prénom" required/>
                         </div>
                     </div>
                     <div class="mb-3">
                             <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Phone number</label>
-                            <input onClick={e=>setUpdateMessage('')} type="tel" id="phone" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="0612345678" pattern="^\d{10}$" required/>
+                            <input defaultValue={uniqueUser.Phone} onClick={e=>setUpdateMessage('')} type="tel" id="phone" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="0612345678" pattern="^\d{10}$" required/>
                         </div>
                         <div class="mb-3">
                             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Email address</label>
-                            <input onClick={e=>setUpdateMessage('')} type="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ahmed@gmail.com" required/>
+                            <input defaultValue={uniqueUser.email} onClick={e=>setUpdateMessage('')} type="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Ahmed@gmail.com" required/>
                         </div>
                         <div class="mb-3">
                             <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">User Password</label>
@@ -198,10 +234,11 @@ const Users = ( )=>{
 						</svg>
 					</button>
 				</div>
+				<span className="text-green-400 pb-4">{deleteMessage}</span>
 				<div class="p-6 text-center">
 							<svg aria-hidden="true" class="mx-auto mb-4 w-14 h-14 text-gray-400 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
 							<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you want to delete this user ?</h3>
-							<button onclick={e=>deleteUser} data-modal-toggle="popup-modal" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
+							<button onClick={e=>deleteUser(toDelete)} data-modal-toggle="popup-modal" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
 								Yes, I'm sure
 							</button>
 							<button onClick={e=>{setDeleteModal(false)}}data-modal-toggle="popup-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No, cancel</button>
@@ -218,5 +255,5 @@ const Users = ( )=>{
         </>
         
     )
-}
+})
 export default Users;

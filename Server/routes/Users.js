@@ -21,6 +21,31 @@ router.get('/', authenticationToken , async (req,res,next)=>{
     }
 })
 
+// get user with id 
+
+router.get('/:id', authenticationToken , async (req,res)=>{
+    const UncodedUser = req.user;
+    Role = UncodedUser && UncodedUser.UserRole;
+    if(Role == 'admin'){
+        try {
+            const userId = req.params.id
+            const user = await prisma.users.findUnique({
+                where:{
+                    IdUser:Number(userId)
+                }
+            })
+            res.send(user)
+        } catch (error) {
+            next(error)
+        }
+    }else{
+        res.send('YOU ARE NOT ADMIN')
+    }
+})
+
+
+
+
 // create a user
 
 router.post('/', authenticationToken, async (req,res,next)=>{
@@ -63,10 +88,11 @@ router.delete('/:id' ,authenticationToken, async (req,res,next)=>{
                 IdUser:Number(id)
             }
         })
-        res.send(user)
+        res.send({rep:"l'utilisateur est supprimé",user:user})
     } catch (error) {
         next(error)
-        }
+        res.send({rep:"cet utilisateur a déjà créé des événements"})
+    }
     }
     else{
         res.send('YOU ARE NOT ADMIN')
@@ -79,13 +105,22 @@ router.put('/:id',authenticationToken, async (req,res , next)=>{
     Role = UncodedUser && UncodedUser.UserRole;
     if(Role == 'admin'){
         const id = req.params.id
+        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash(req.body.Password,salt)
     try {
         const user = await prisma.users.update({
             where:{
                 IdUser:Number(id)
-            },data:req.body
+            },
+            data:{
+                    Nom:req.body.Nom,
+                    Prenom:req.body.Prenom,
+                    Password:hashedPassword,
+                    email:req.body.email,
+                    Phone:req.body.Tel
+            }
         })
-        res.send(user)
+        res.send({rep:"l'utilisateur est mis à jour",user:user})
     } catch (error) {
         next(error)
     }}else{
