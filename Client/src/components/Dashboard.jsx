@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Users from "./Tables/Users";
-import DashboardCounters from "./DashboardCounters";
+import DashboardCounters from "./other/DashboardCounters";
 import AddUser from "./Forms/AddUser";
 import { useRef } from "react";
 

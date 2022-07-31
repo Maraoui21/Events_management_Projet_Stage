@@ -1,5 +1,5 @@
 import React , {useEffect, useState} from "react";
-import EventCard from "./EventCard";
+import EventCard from "./other/EventCard";
 import Cookies from "js-cookie";
 import axios from "axios";
 import SideBar from "./SideBar";

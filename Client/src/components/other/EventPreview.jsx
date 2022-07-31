@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import EventCard from "./EventCard";
-import SideBar from "./SideBar";
+import SideBar from "../SideBar";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
+import BottomSlider from "../PopularPosts/BottomSlider";
 
 const EventPreview = ()=>{
 
@@ -16,16 +16,16 @@ const EventPreview = ()=>{
     }
     useEffect(()=>{
         fetchData()
-    })
+    },[])
 
 
 
     return (
         <div className="container mx-auto flex flex-wrap py-6 xl:px-28 lg:px-10 px-5">
-        <div className="w-full md:w-2/3 flex flex-col items-center px-3">
+        <div className="w-full md:w-2/3 flex flex-col px-3">
             <article class="flex flex-col shadow my-4">
                         <a href="#" class="hover:opacity-75">
-                            <img src={require('../img/EventsImg/testImg.jfif')}/>
+                            <img src={require('../../img/EventsImg/testImg.jfif')}/>
                         </a>
                         <div class="bg-white flex flex-col justify-start p-6">
                             <h2 class="text-3xl capitalize font-bold hover:text-gray-700 pb-4">
@@ -40,6 +40,7 @@ const EventPreview = ()=>{
                             
                         </div>
             </article>
+            <BottomSlider/>
         </div>
         <SideBar/>
         </div>

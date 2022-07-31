@@ -5,9 +5,9 @@ import Navbar from './Navbar';
 import {Route,Routes} from "react-router-dom"
 import AddEvent from './Forms/AddEvent';
 import Dashboard from './Dashboard';
-import Participants from './Participant';
+import Participants from './other/Participant';
 import ProtectedRoutes from './ProtectedRoutes';
-import EventPreview from './EventPreview';
+import EventPreview from "./other/EventPreview";
 
 const Accueil = () =>{
     return (

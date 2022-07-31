@@ -7,7 +7,7 @@ const EventCard = (props) =>{
     }
     return (
         <>
-            <article class="flex flex-col shadow my-4">
+            <article class="flex flex-col border my-4">
                         <a href="#" class="hover:opacity-75">
                             <img src={props.img}/>
                         </a>
