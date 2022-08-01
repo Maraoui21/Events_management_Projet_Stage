@@ -59,13 +59,7 @@ const Navbar = () =>{
                                     </li>
                                 </>
                                 :
-                                <li>
-                                        <Link onClick={e=>addActive(e)} to="/participants" className={`flex itmes-center block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-blue-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700`}>Vérifier votre inscription
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="text-green h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                            </svg>
-                                        </Link>
-                                </li>
+                                null
                                 }
                                 {isAdmin?
                                     <li >

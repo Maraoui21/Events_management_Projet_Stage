@@ -18,5 +18,13 @@
   <body>
     <div id="root"></div>
     <script src="https://unpkg.com/flowbite@1.4.7/dist/flowbite.js"></script>
+    <script>
+      document.addEventListener( 'DOMContentLoaded', function() {
+            const NavigationBtns = document.querySelectorAll('.splide__arrow')
+            NavigationBtns.forEach(e=>{
+              e.classList.add('bg-white')
+            })
+          });
+    </script>
   </body>
 </html>

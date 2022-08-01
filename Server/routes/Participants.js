@@ -7,17 +7,33 @@ const {authenticationToken} = require('../middelware/verify');
 // add a Participant 
 
 router.post('/Participants', async (req, res, next) => {
+
   try {
-      const Participant = await prisma.Participants.create({
-        data:{
-          Nom:req.body.Nom,
-          Prenom:req.body.Prenom,
-          EvenementID:Number(req.body.EvenementID)
-        }
-      })
-    res.send(Participant);
+      const allEventParticipants = await prisma.participants.findMany({
+          where:{
+            // email:req.body.email
+            EvenementID:Number(req.body.EvenementID)
+          }
+      }) 
+      const user = allEventParticipants.find(user=>user.email == req.body.email)
+      if(user){
+        res.send({warr:'Vous êtes déjà inscrit'})
+      }
+      else{
+            const Participant = await prisma.Participants.create({
+              data:{
+                Nom:req.body.Nom,
+                Prenom:req.body.Prenom,
+                email:req.body.email,
+                Tel:req.body.Tel,
+                EvenementID:Number(req.body.EvenementID)
+              }
+            })
+          res.send({rep:'Vous êtes inscrire'});
+      }
     }catch(error) {
       next(error)
+      res.send({err:'votre inscription a échoué'})
     }
 });
 

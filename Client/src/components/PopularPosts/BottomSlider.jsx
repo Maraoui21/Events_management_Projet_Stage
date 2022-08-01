@@ -1,17 +1,23 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/react-splide/dist/css/themes/splide-skyblue.min.css';
+import axios from "axios";
+import { Link , useNavigate } from "react-router-dom";
 
 const BottomSlider = () => {
 
-    function getSnippet(text, length) {
-        const result = text.substr(0, length*5);
-        return result;
+    const [smallEvents,setSmallEvents] = useState([]);
+    const navigate = useNavigate();
+    function changeLocation(path){
+        navigate(path)
     }
 
-    const paragraphe = `Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
-    molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum
-    numquam blanditiis`;
+    useEffect(()=>{
+        axios.get('http://localhost:3000/api/evenments/',)
+        .then(e=>{
+            setSmallEvents(e.data)
+        })
+    },[])
 
     return ( 
     <>
@@ -31,32 +37,29 @@ const BottomSlider = () => {
                     }
                 }
                 
-    } }
+    }}
     aria-label="My Favorite Images">
-        <SplideSlide className="px-1">
-            <div class="splide__slide__container rounded">
-                <img src={require('../../img/EventsImg/testImg.jfif')} alt="Image 1"/>
-            </div>
-            <p className="p-1 cursor-pointer pt-4 pb-8">
-                {getSnippet(paragraphe,20)}
-            </p>
-        </SplideSlide>
-        <SplideSlide className="px-1">
-            <div class="splide__slide__container rounded">
-                <img src={require('../../img/LoginBackground/LoginHero.jpg')} alt="Image 2"/>
-            </div>
-            <p  className="p-1 cursor-pointer pt-4 pb-8">
-            {getSnippet(paragraphe,20)}
-            </p>
-        </SplideSlide>
-        <SplideSlide className="px-1">
-            <div class="splide__slide__container rounded">
-                <img src={require('../../img/LoginBackground/LoginHero.jpg')} alt="Image 2"/>
-            </div>
-            <p className="p-1 cursor-pointer pt-4 pb-8">
-            {getSnippet(paragraphe,20)}
-            </p>
-        </SplideSlide>
+        {
+        smallEvents && smallEvents.map(e=>{
+                const id = e.IdEv;
+                return(
+                    <SplideSlide key={e.IdEv} className="px-1">
+                            <div 
+                            onClick={e=>{changeLocation(`/preview/${id}`)}}
+                            class="splide__slide__container rounded cursor-pointer">
+                                    <img
+                                    src={`http://localhost:3000/EventsImages/${e.ImgPath}`}
+                                    alt="Image 1"/>
+                            </div>
+                        <Link to={`/preview/${e.IdEv}`}>
+                            <p className="p-1 cursor-pointer pt-4 pb-8">
+                            {e.Titre}
+                            </p>
+                        </Link>
+                    </SplideSlide>
+                )
+            })
+        }
     </Splide>
     </>
     )

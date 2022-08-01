@@ -14,7 +14,8 @@ router.post('/', async (req,res,next)=>{
     if(user != null )
     {
         // if hashed password nat equal to user password 
-        if(await bcrypt.compare(req.body.password,user.Password)){
+        if(await bcrypt.compare(req.body.password,user.Password))
+        {
             // CREATE JSON WEB TOKEN 
             const accessToken = jwt.sign(user,process.env.ACCESS_TOKEN_SECRET)
             res.send({jwt:accessToken,name:user.Nom,Role:user.UserRole,email:user.email});

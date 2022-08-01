@@ -1,18 +1,31 @@
 const router = require('express').Router();
-const { PrismaClient } = require('@prisma/client')
+const { PrismaClient } = require('@prisma/client');
+const multer = require('multer');
+const path = require('path');
 const prisma = new PrismaClient()
 const {authenticationToken} = require('../middelware/verify');
+
+const fileStorageEngine = multer.diskStorage({
+    destination:(req,file,cb)=>{
+        cb(null,path.join(__dirname, '../public/EventsImages'))
+    },
+    filename:(req,file,cb)=>{
+        cb(null,Date.now()+"--"+file.originalname);
+    },
+})
+
+const upload = multer({storage:fileStorageEngine});
 
 
 // create an event
 
-router.post('/evenments', authenticationToken, async (req,res,next)=>{
+router.post('/evenments', authenticationToken, upload.single('image') ,async (req,res,next)=>{
     try {
         const event = await prisma.Evenements.create({
             data:
             { 
                 Titre:req.body.Titre,
-                ImgPath:req.body.ImgPath,
+                ImgPath:req.file.filename,
                 Date:req.body.Date,
                 Contenu:req.body.Contenu,
                 Form:Boolean(Number(req.body.Form)) 
@@ -76,7 +89,7 @@ router.delete('/evenments/:id', authenticationToken , async (req, res,next)=>{
 
 // update an event
 
-router.put('/evenments/:id', authenticationToken , async ( req,res )=>{
+router.put('/evenments/:id', authenticationToken , upload.single('image') , async ( req,res )=>{
     const toUpdateID = req.params.id;
     try {
         const toUpdateEVent = await prisma.Evenements.update({
@@ -84,7 +97,7 @@ router.put('/evenments/:id', authenticationToken , async ( req,res )=>{
             data:
             { 
                 Titre:req.body.Titre,
-                ImgPath:req.body.ImgPath,
+                ImgPath:req.file.filename,
                 Date:req.body.Date,
                 Contenu:req.body.Contenu,
                 Form:Boolean(Number(req.body.Form)) 
@@ -92,7 +105,7 @@ router.put('/evenments/:id', authenticationToken , async ( req,res )=>{
         })
         res.send({rep:"L'événement est modifié"})
     } catch (error) {
-        next(error)
+        // next(error)
         res.send({err:'erreur de modification'})
     }
 })  

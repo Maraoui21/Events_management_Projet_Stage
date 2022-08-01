@@ -8,6 +8,7 @@ const AddEvent = () =>{
     const jwt = StoredVal && JSON.parse(StoredVal).jwt;
     const headers = { 
         'Authorization': `Bearer ${jwt}`,
+        'content-type': 'multipart/form-data'
     };
 
     const [updateUserModal, setUpdateModal] = useState(false);
@@ -40,7 +41,7 @@ const AddEvent = () =>{
         const title = e.target.title.value;
         const date  = e.target.date.value;
         const IsoDate = new Date(date).toISOString();
-        const img   = e.target.img.value;
+        const img   = e.target.img.files[0];
         const content = e.target.content.value;
         const checkBoxs = e.target.formRadio;
         let checkedRadio;
@@ -49,8 +50,16 @@ const AddEvent = () =>{
                 checkedRadio = element.value;
             }
         });
-        const Event = {Titre:title,ImgPath:img,Date:IsoDate,Contenu:content,Form:checkedRadio};
-        axios.post('http://localhost:3000/api/evenments',Event,{headers})
+        // const Event = {Titre:title,ImgPath:img,Date:IsoDate,Contenu:content,Form:checkedRadio};
+        
+        const data = new FormData()
+        data.append('Titre',title);
+        data.append('image',img);
+        data.append('Date',IsoDate);
+        data.append('Contenu',content);
+        data.append('Form',checkedRadio);
+
+        axios.post('http://localhost:3000/api/evenments',data,{headers})
         .then(Response=>{
             setMessage(Response.data.rep)
             postedEvents.push(Response.data.ev)
@@ -74,7 +83,7 @@ const AddEvent = () =>{
         const title = e.target.title.value;
         const date  = e.target.date.value;
         const IsoDate = new Date(date).toISOString();
-        const img   = e.target.img.value;
+        const img   = e.target.img.files[0];
         const content = e.target.content.value;
         const checkBoxs = e.target.formRadio;
         let checkedRadio;
@@ -84,8 +93,18 @@ const AddEvent = () =>{
             }
         });
         
-        const Event = {Titre:title,ImgPath:img,Date:IsoDate,Contenu:content,Form:checkedRadio};
-        axios.put(`http://localhost:3000/api/evenments/${toUpdate}`,Event,{headers})
+        // const Event = {Titre:title,ImgPath:img,Date:IsoDate,Contenu:content,Form:checkedRadio};
+
+        const data = new FormData()
+        data.append('Titre',title);
+        data.append('image',img);
+        data.append('Date',IsoDate);
+        data.append('Contenu',content);
+        data.append('Form',checkedRadio);
+
+
+
+        axios.put(`http://localhost:3000/api/evenments/${toUpdate}`,data,{headers})
         .then(e=>{
             (e.data.rep!==undefined)?setUpdateMessage(e.data.rep):setUpdateMessage(e.data.err);
             fetchData()
@@ -216,7 +235,12 @@ const AddEvent = () =>{
                                 <>
                                 <ul id={event.IdEv} key={index} className="flex rounded justify-between items-center p-2 mb-2 border bg-slate-50">
                                     <span className="flex items-center">
-                                        <li className="mr-5"><img class="rounded h-10 w-10" src="https://media-cdn.tripadvisor.com/media/photo-s/0c/bb/a3/97/predator-ride-in-the.jpg" alt="" /></li>
+                                        <li 
+                                        className="mr-5"><div class="rounded bg-cover bg-center h-10 w-10"
+                                        style={{ backgroundImage:`url(http://localhost:3000/EventsImages/${event.ImgPath})` }}
+                                        >
+                                        </div>
+                                        </li>
                                         <li>{event.Titre}</li>
                                     </span>
                                     <span className="flex">
@@ -275,13 +299,13 @@ const AddEvent = () =>{
 				</div>
                 <span className="text-green-400 mb-5">{updateMessage}</span>
 				<form onSubmit={e=>{updateArticle(e)}}>
-                    <div class="relative mb-4">
+                        <div class="relative mb-4">
                                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                         <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path></svg>
                                     </div>
                                         <input  defaultValue={toUpdateInfo.Titre} id="title" name="title" type="text" placeholder="Titre de l'événement" className="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 outline-0" required/>
-                                    </div>
-                                    <div class="relative mb-4">
+                        </div>
+                        <div class="relative mb-4">
                                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -290,7 +314,7 @@ const AddEvent = () =>{
                                         <input
                                         defaultValue={toUpdateInfo.DateTime}
                                         name="date" type="date" placeholder="Titre de l'événement" className="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 outline-0" required/>
-                                    </div>
+                        </div>
                                     <div class="mb-3 w-full bg-gray-50 rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600">
                                             <div class="flex justify-between items-center py-2 px-3 border-b dark:border-gray-600">
                                                 <div class="flex flex-wrap items-center divide-gray-200 sm:divide-x dark:divide-gray-600">

@@ -8,9 +8,10 @@ const EventCard = (props) =>{
     return (
         <>
             <article class="flex flex-col border my-4">
-                        <a href="#" class="hover:opacity-75">
-                            <img src={props.img}/>
-                        </a>
+                        <Link to={`/preview/${props.EvID}`} class="hover:opacity-75">
+                            <div className="w-full h-96 bg-cover bg-no-repeat" style={{ backgroundImage:`url(${props.img})` }}>
+                            </div>
+                        </Link>
                         <div class="bg-white flex flex-col justify-start p-6">
                             <Link to={`/preview/${props.EvID}`} class="text-3xl capitalize font-bold hover:text-gray-700 pb-4">{props.title}</Link>
                             <p href="#" class="text-sm pb-3">
