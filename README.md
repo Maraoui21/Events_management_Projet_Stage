@@ -2,7 +2,7 @@
 <h3>Home Page</h3>
 <img src="https://user-images.githubusercontent.com/100817261/211114237-f16cbf14-9dd9-406b-bc74-89feb0f9f9e5.png" height="50%">\
 <h3>Posts Page</h3>
-
+<img src="https://user-images.githubusercontent.com/100817261/211115324-adac93e3-d407-4056-aa05-73eb6fd80b4d.png" height="50%"/>
 <h3>Admin Dashboard</h3>
 <img src="https://user-images.githubusercontent.com/100817261/211114226-d3a08760-e772-436d-8aba-3bafcff1d90a.png" height="50%"/>
 <h3>Login</h3>
