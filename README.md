@@ -1,6 +1,6 @@
 # Events_management
 <h3>Home Page</h3>
-![Home ](https://user-images.githubusercontent.com/100817261/211114237-f16cbf14-9dd9-406b-bc74-89feb0f9f9e5.png)
+<img src="https://user-images.githubusercontent.com/100817261/211114237-f16cbf14-9dd9-406b-bc74-89feb0f9f9e5.png" height="50%">
 <h3>Admin Dashboard</h3>
 ![screencapture-localhost-3000-2022-09-22-21_16_45](https://user-images.githubusercontent.com/100817261/211114226-d3a08760-e772-436d-8aba-3bafcff1d90a.png)
 <h3>Login</h3>
