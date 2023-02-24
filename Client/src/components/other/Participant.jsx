@@ -26,7 +26,7 @@ const Participants = () =>{
     const [isLoading,setLoading] = useState(false);
 
     function fetchData(){
-        axios.get('http://localhost:3000/api/evenments',{headers})
+        axios.get('https://event4manager.onrender.com/api/evenments',{headers})
         .then(Response=>{
             setEvent(Response.data)
         })
@@ -36,7 +36,7 @@ const Participants = () =>{
             setEmpty('Choisir un événement !')
         }else{
             setLoading(true)
-            axios.get(`http://localhost:3000/api/Participants/${EvId}`,{headers})
+            axios.get(`https://event4manager.onrender.com/api/Participants/${EvId}`,{headers})
             .then(Response=>{
                 setParticipants(Response.data)
                 setLoading(false)

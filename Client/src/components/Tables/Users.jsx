@@ -38,7 +38,7 @@ const Users = forwardRef((childRef,ref)=>{
 	}
 	
 	function fetchUsers(){
-		axios.get('http://localhost:3000/users',{headers})
+		axios.get('https://event4manager.onrender.com/users',{headers})
 		.then(e=>{
 			setUsers(e.data)
 			setLoading(false)
@@ -46,7 +46,7 @@ const Users = forwardRef((childRef,ref)=>{
 	}
 
 	function fetchUniqueUser(userId){
-		axios.get(`http://localhost:3000/users/${userId}`,{headers})
+		axios.get(`https://event4manager.onrender.com/users/${userId}`,{headers})
 		.then(e=>{
 			setUser(e.data);
 			setUpdateModal(true)
@@ -62,7 +62,7 @@ const Users = forwardRef((childRef,ref)=>{
 		const password = e.target.password.value;
 		const NewUser = {Nom:firstName,Prenom:lastName,Password:password,email:email,Tel:phone}
 		console.log(NewUser)
-		axios.put(`http://localhost:3000/users/${IdUser}`,NewUser,{headers})
+		axios.put(`https://event4manager.onrender.com/users/${IdUser}`,NewUser,{headers})
 		.then(Response=>{
 			setUpdateMessage(Response.data.rep)
 			fetchUsers();
@@ -70,7 +70,7 @@ const Users = forwardRef((childRef,ref)=>{
 	}
 	
 	function deleteUser(userId){
-		axios.delete(`http://localhost:3000/users/${userId}`,{headers})
+		axios.delete(`https://event4manager.onrender.com/users/${userId}`,{headers})
 		.then(e=>{
 			setDeleteMessage(e.data.rep)
 			fetchUsers();

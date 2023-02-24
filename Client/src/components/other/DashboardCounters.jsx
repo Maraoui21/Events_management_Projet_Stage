@@ -15,21 +15,21 @@ const DashboardCounters = () =>{
 
         // users 
 
-        axios.get('http://localhost:3000/users',{headers})
+        axios.get('https://event4manager.onrender.com/users',{headers})
         .then(e=>{
             setUsers(e.data);
         });
 
         // Events 
 
-        axios.get('http://localhost:3000/api/evenments',)
+        axios.get('https://event4manager.onrender.com/api/evenments',)
         .then(e=>{
             setEvent(e.data)
         });
 
         //  participants
 
-        axios.get('http://localhost:3000/api/Participants',{headers})
+        axios.get('https://event4manager.onrender.com/api/Participants',{headers})
         .then(e=>{
             setParticipants(e.data)
         });

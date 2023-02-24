@@ -17,7 +17,7 @@ const AddUser = (props) =>{
         const email = e.target.email.value;
         const password = e.target.email.value;
         const NewUser = {Nom:firstName,Prenom:lastName,Password:password,email:email,Tel:phone};
-        axios.post('http://localhost:3000/users',NewUser,{headers})
+        axios.post('https://event4manager.onrender.com/users',NewUser,{headers})
         .then(Response=>{
             setMessage(Response.data.rep)
             props.callParent()

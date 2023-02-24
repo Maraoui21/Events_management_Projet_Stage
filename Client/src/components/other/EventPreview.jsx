@@ -16,7 +16,7 @@ const EventPreview = ()=>{
     }
 
     function fetchData(){
-        axios.get(`http://localhost:3000/api/evenments/${id}`)
+        axios.get(`https://event4manager.onrender.com/api/evenments/${id}`)
         .then(Response=>{
             setEvent(Response.data)
         })
@@ -31,7 +31,7 @@ const EventPreview = ()=>{
         // the variable id is the event id
 
         const Participant = {Nom:firstName,Prenom:lastName,Tel:phone,email:email,EvenementID:id};
-        axios.post('http://localhost:3000/api/Participants',Participant)
+        axios.post('https://event4manager.onrender.com/api/Participants',Participant)
         .then((e)=>
             {
             if(e.data.rep!==undefined){
@@ -66,7 +66,7 @@ const EventPreview = ()=>{
             <article class="flex flex-col shadow my-4">
                         <span href="#" class="hover:opacity-75">
                         <div className="w-full h-96 bg-cover bg-no-repeat" 
-                        style={{ backgroundImage:`url(${`http://localhost:3000/EventsImages/${event.ImgPath}`})` }}>
+                        style={{ backgroundImage:`url(${`https://event4manager.onrender.com/EventsImages/${event.ImgPath}`})` }}>
                         </div>
                         </span>
                         <div class="bg-white flex flex-col justify-start p-6">

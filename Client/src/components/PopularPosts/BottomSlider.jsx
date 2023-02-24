@@ -13,7 +13,7 @@ const BottomSlider = () => {
     }
 
     useEffect(()=>{
-        axios.get('http://localhost:3000/api/evenments/',)
+        axios.get('https://event4manager.onrender.com/api/evenments/',)
         .then(e=>{
             setSmallEvents(e.data)
         })
@@ -48,7 +48,7 @@ const BottomSlider = () => {
                             onClick={e=>{changeLocation(`/preview/${id}`)}}
                             class="splide__slide__container rounded cursor-pointer">
                                     <img
-                                    src={`http://localhost:3000/EventsImages/${e.ImgPath}`}
+                                    src={`https://event4manager.onrender.com/EventsImages/${e.ImgPath}`}
                                     alt="Image 1"/>
                             </div>
                         <Link to={`/preview/${e.IdEv}`}>

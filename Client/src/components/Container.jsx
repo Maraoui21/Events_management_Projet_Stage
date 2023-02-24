@@ -16,7 +16,7 @@ const Container = ()=>{
 
 
     function fetchData(){
-        axios.get('http://localhost:3000/api/evenments',{headers})
+        axios.get('https://event4manager.onrender.com/api/evenments',{headers})
         .then(Response=>{
             setEvent(Response.data)
             setLoading(false)
@@ -44,7 +44,7 @@ const Container = ()=>{
 					</>:null}
                     {Events && Events.map((e)=>{
                             return (
-                                <EventCard  img={`http://localhost:3000/EventsImages/${e.ImgPath}`}
+                                <EventCard  img={`https://event4manager.onrender.com/EventsImages/${e.ImgPath}`}
                                 title={`${e.Titre}`}
                                 date={`${e.Date.split('T')[0]}`}
                                 content={`${e.Contenu}`}

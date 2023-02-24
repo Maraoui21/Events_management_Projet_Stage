@@ -27,7 +27,7 @@ const AddEvent = () =>{
     const user = {name:res.name,email:res.email,Role:res.Role};
 
     function fetchData(){
-        axios.get('http://localhost:3000/api/evenments',{headers})
+        axios.get('https://event4manager.onrender.com/api/evenments',{headers})
         .then(Response=>{
             setEvent(Response.data)
             setLoading(false)
@@ -59,7 +59,7 @@ const AddEvent = () =>{
         data.append('Contenu',content);
         data.append('Form',checkedRadio);
 
-        axios.post('http://localhost:3000/api/evenments',data,{headers})
+        axios.post('https://event4manager.onrender.com/api/evenments',data,{headers})
         .then(Response=>{
             setMessage(Response.data.rep)
             postedEvents.push(Response.data.ev)
@@ -67,7 +67,7 @@ const AddEvent = () =>{
     }
     
     function fetchUniqueEvent(IdEvent){
-        axios.get(`http://localhost:3000/api/evenments/${IdEvent}`)
+        axios.get(`https://event4manager.onrender.com/api/evenments/${IdEvent}`)
         .then(e=>{
             const dateFom = new Date(e.data.Date);
             const DateTime = dateFom.toISOString().substring(0,10);
@@ -104,7 +104,7 @@ const AddEvent = () =>{
 
 
 
-        axios.put(`http://localhost:3000/api/evenments/${toUpdate}`,data,{headers})
+        axios.put(`https://event4manager.onrender.com/api/evenments/${toUpdate}`,data,{headers})
         .then(e=>{
             (e.data.rep!==undefined)?setUpdateMessage(e.data.rep):setUpdateMessage(e.data.err);
             fetchData()
@@ -112,7 +112,7 @@ const AddEvent = () =>{
         setUpdateID(null)
     }
     function deleteEvent(){
-        axios.delete(`http://localhost:3000/api/evenments/${toDelete}`,{headers})
+        axios.delete(`https://event4manager.onrender.com/api/evenments/${toDelete}`,{headers})
         .then(e=>{
             (e.data.rep!== undefined)?setDeleteMessage(e.data.rep):setDeleteMessage(e.data.err);
             fetchData();
